@@ -1,10 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { showToast } from "@/components/ui-lib";
+import { showToast, ReturnButton } from "@/components/ui-lib";
 import { useUserStore } from "@/store";
-import { ReturnButton } from "@/components/ui-lib";
 import { RegisterResponse, ResponseStatus } from "@/app/api/typing.d";
 
 import Locales from "@/locales";
@@ -19,13 +18,34 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [isSending, setIsSending] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [invitationCode, setInvitationCode] = useState(
     searchParams.get("code") ?? ""
   );
 
-  const [submitting, setSubmitting] = useState(false);
+  const [disableCode, setDisableCode] = useState(true);
+  const [disableLog, setDisableLog] = useState(true);
+
+  const [time, setTime] = useState(0);
+
+  const [btnTitle, setBtnTitle] = useState("Get Code");
+  const timeRef = useRef<NodeJS.Timeout>()
+//倒计时
+  useEffect(()=>{
+      if(time&&time!==0) {
+        timeRef.current=setTimeout(()=>{
+          setTime(time=>time-1)
+          setBtnTitle(`Pleaser Waite (${time})s`)
+       },1000)
+      } else {
+        setBtnTitle('Get Code')
+        setDisableCode(email.length < 2)
+      }
+      //清楚延时器
+      return ()=>{
+          clearTimeout(timeRef.current)
+      }
+  },[time])
 
   const [updateSessionToken, updateEmail] = useUserStore((state) => [
     state.updateSessionToken,
@@ -34,13 +54,10 @@ export default function Register() {
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!email || !password ) {
+    if (!email || !password || !verificationCode) {
       showToast(Locales.Index.NoneData);
-      setSubmitting(false);
       return;
     }
-
     const res = (await (
       await fetch("/api/user/register", {
         cache: "no-store",
@@ -79,18 +96,24 @@ export default function Register() {
     }
   };
 
+  const handleButtonState = () => {
+    setDisableCode(true)
+    setTime(60)
+  };
+
+
   const handleSendVerification = async () => {
-    setSubmitting(true);
 
     if (!email) {
       showToast("请输入邮箱");
-      setSubmitting(false);
       return;
     }
 
+    handleButtonState()
+
     const res = await (
       await fetch(
-        "/api/user/register/code?email=" + encodeURIComponent(email),
+        "/api/user/register/codeee?email=" + encodeURIComponent(email),
         {
           cache: "no-store",
           headers: { "Content-Type": "application/json" },
@@ -103,7 +126,6 @@ export default function Register() {
         switch (res.code_data.status) {
           case 0:
             showToast("验证码成功发送!");
-            setIsSending(true);
             break;
           case 1:
             showToast(Locales.Index.DuplicateRegistration);
@@ -120,6 +142,7 @@ export default function Register() {
       }
       case ResponseStatus.notExist: {
         showToast(Locales.Index.EmailNonExistent);
+        setTime(0)
         break;
       }
       default: {
@@ -127,8 +150,28 @@ export default function Register() {
         break;
       }
     }
-    setSubmitting(false);
   };
+
+
+  const emailChange = (val:string) => {
+    setEmail(val)
+    const state:boolean = email.length > 0 && password.length > 0 && verificationCode.length > 0
+    setDisableLog(!state)
+    console.log(email.length) 
+    setDisableCode(email.length < 2)
+  }
+
+  const passwordChange = (val:string) => {
+    setPassword(val)
+    const state:boolean = email.length > 0 && password.length > 0 && verificationCode.length > 0
+    setDisableLog(!state) 
+  }
+
+  const verifyChange = (val:string) => {
+    setVerificationCode(val)
+    const state:boolean = email.length > 0 && password.length > 0 && verificationCode.length > 0
+    setDisableLog(!state) 
+  }
 
   return (
     <div className={styles["login-form-container"]}>
@@ -142,7 +185,7 @@ export default function Register() {
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => emailChange(e.target.value)}
             required
           />
         </div>
@@ -152,8 +195,7 @@ export default function Register() {
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            onChange={(e) => passwordChange(e.target.value)}
           />
         </div>
 
@@ -166,14 +208,15 @@ export default function Register() {
                 id="verification-code"
                 maxLength={6}
                 pattern="\d{6}"
-                onChange={(e) => setVerificationCode(e.target.value)}
+                onChange={(e) => verifyChange(e.target.value)}
               />
               <button
                 className={styles["send-verification-button"]}
                 onClick={handleSendVerification}
-                disabled={submitting}
+                disabled={disableCode}
+                type="button"
               >
-                {isSending ? "Already Send to Email" : "Get Code"}
+                { btnTitle }
               </button>
             </div>
           </div>
@@ -193,7 +236,7 @@ export default function Register() {
         </div>
 
         <div className={styles["button-container"]}>
-          <button className={styles["login-form-submit"]} type="submit">
+          <button className={styles["login-form-submit"]} type="submit" disabled={disableLog}>
             Register
           </button>
         </div>

@@ -2,13 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import { useUserStore } from "@/store";
-
+import { Loading } from "@/components/loading";
 import { showToast } from "@/components/ui-lib";
 import { ResponseStatus } from "@/app/api/typing.d";
 import { useRouter } from "next/navigation";
 import Locales from "@/locales";
 import { ReturnButton } from "@/components/ui-lib";
-import Locale from "@/locales";
 
 import styles from "./login.module.scss";
 
@@ -16,10 +15,11 @@ export default function Login() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
 
   // 防止表单重复 提交
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting, setSubmitting] = useState(true);
   const [updateSessionToken, updateEmail] = useUserStore((state) => [
     state.updateSessionToken,
     state.updateEmail,
@@ -34,7 +34,8 @@ export default function Login() {
       setSubmitting(false);
       return;
     }
-
+    
+    setIsLoading(true)
     const res = await (
       await fetch("/api/user/login", {
         cache: "no-store",
@@ -43,7 +44,7 @@ export default function Login() {
         body: JSON.stringify({ email: email.trim(), password }),
       })
     ).json();
-
+    setIsLoading(false)
     switch (res.status) {
       case ResponseStatus.Success: {
         updateSessionToken(res.sessionToken);
@@ -69,6 +70,22 @@ export default function Login() {
     setSubmitting(false);
   };
 
+  const emailChange = (value: string) => {
+    setEmail(value)
+    if (email && password) {
+      setSubmitting(false)
+    }
+  }
+
+  const passwordChange = (value: string) => {
+    setPassword(value)
+    if (email && password) {
+      setSubmitting(false)
+    }
+  }
+
+  if (isLoading) return <Loading />;
+
   return (
     <>
       <div className={styles["login-form-container"]}>
@@ -82,7 +99,7 @@ export default function Login() {
               type="email"
               id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => emailChange(e.target.value)}
               required
             />
           </div>
@@ -92,7 +109,7 @@ export default function Login() {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => passwordChange(e.target.value)}
               required
             />
           </div>

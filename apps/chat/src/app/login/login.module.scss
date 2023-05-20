@@ -61,7 +61,7 @@
     }
 
     .send-verification-button {
-      background-color: var(--second);
+      background-color: #1daabd;
 
       color: black; // 按钮文字颜色
       padding: 8px 16px; // 内边距，使按钮看起来更大
@@ -99,6 +99,10 @@
 
   &:hover {
     background-color: #1d93ab;
+  }
+  &:disabled {
+    background-color: #ccc; // 按钮禁用时的背景颜色
+    cursor: not-allowed; // 按钮禁用时的鼠标指针
   }
 }
 
