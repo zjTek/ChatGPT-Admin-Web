@@ -157,7 +157,6 @@ export default function Register() {
     setEmail(val)
     const state:boolean = email.length > 0 && password.length > 0 && verificationCode.length > 0
     setDisableLog(!state)
-    console.log(email.length) 
     setDisableCode(email.length < 2)
   }
 
