@@ -160,7 +160,7 @@ const cn = {
       Summarize:
         "简要总结一下你和用户的对话，用作后续的上下文提示 prompt，控制在 50 字以内",
     },
-    ConfirmClearAll: "确认清除所有聊天、设置数据？",
+    ConfirmClearAll: "确认清除所有聊天、设置数据、并退出？",
   },
   Copy: {
     Success: "已写入剪切板",

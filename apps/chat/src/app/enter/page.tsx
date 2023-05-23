@@ -10,7 +10,7 @@ export default function Index() {
 
   return (
     <div className={styles["content"]}>
-      <h2 className={styles["text"]}>AI BOT</h2>
+      <h2 className={styles["text"]}>Deer BOT</h2>
       <div className={styles["buttons"]}>
         <button
           className={styles["button"]}
@@ -18,12 +18,12 @@ export default function Index() {
         >
           {Locales.Index.Login}
         </button>
-        <button
+        {/* <button
           className={styles["button"]}
           onClick={() => router.push("/register")}
         >
           {Locales.Index.Register}
-        </button>
+        </button> */}
       </div>
     </div>
   );

@@ -17,7 +17,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ]);
 
   useEffect(() => {
-    if (!sessionToken || !validateSessionToken()) {
+    if (["/register"].includes(pathname)) {
+      return router.push("/enter");
+    }else if (!sessionToken || !validateSessionToken()) {
       if (!["/login", "/register", "/enter"].includes(pathname)) {
         return router.push("/enter");
       }

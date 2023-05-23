@@ -18,6 +18,7 @@ import CloseIcon from "@/assets/icons/close.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import ShoppingIcon from "@/assets/icons/shopping.svg";
 import UserIcon from "@/assets/icons/user.svg";
+import ExsitIcon from "@/assets/icons/exists.svg"
 
 import styles from "@/styles/module/home.module.scss";
 
@@ -67,12 +68,20 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
   const { data: rateLimit, isLoading: rateLimitLoading } = useLimit();
 
+  const clearChatData = useChatStore((state) => state.clearAllData);
+
+  function clearAllData() {
+    clearChatData();
+  }
+
   // 暗色模式切换
   useSwitchTheme();
 
   if (loading) {
     return <Loading />;
   }
+
+
 
   return (
     <div
@@ -171,6 +180,12 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
               <IconButton
                 icon={<AnnouncementIcon />}
                 onClick={() => showAnnouncement(notice)}
+              />
+            </div>
+            <div className={styles["sidebar-action"]}>
+              <IconButton
+                icon={<ExsitIcon />}
+                onClick={() => clearAllData()}
               />
             </div>
           </div>
