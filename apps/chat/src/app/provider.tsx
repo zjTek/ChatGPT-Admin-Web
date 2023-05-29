@@ -18,10 +18,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (["/register"].includes(pathname)) {
-      return router.push("/enter");
+      return router.push("/login");
     }else if (!sessionToken || !validateSessionToken()) {
       if (!["/login", "/register", "/enter"].includes(pathname)) {
-        return router.push("/enter");
+        return router.push("/login");
       }
     } else if (["/login", "/register", "/enter"].includes(pathname)) {
       return router.replace("/");

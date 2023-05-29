@@ -7,7 +7,6 @@ import { showToast } from "@/components/ui-lib";
 import { ResponseStatus } from "@/app/api/typing.d";
 import { useRouter } from "next/navigation";
 import Locales from "@/locales";
-import { ReturnButton } from "@/components/ui-lib";
 
 import styles from "./login.module.scss";
 
@@ -19,7 +18,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   // 防止表单重复 提交
-  const [submitting, setSubmitting] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [updateSessionToken, updateEmail] = useUserStore((state) => [
     state.updateSessionToken,
     state.updateEmail,
@@ -84,17 +83,13 @@ export default function Login() {
     }
   }
 
-  if (isLoading) return <Loading />;
-
   return (
     <>
       <div className={styles["login-form-container"]}>
         <form className={styles["login-form"]} onSubmit={handleLogin}>
-          <ReturnButton onClick={() => router.push("/enter")} />
-
-          <h2 className={styles["login-form-title"]}>Login</h2>
+          <h2 className={styles["login-form-title"]}>Deer GPT</h2>
           <div className={styles["login-form-input-group"]}>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">邮箱（用户名）</label>
             <input
               type="email"
               id="email"
@@ -104,7 +99,7 @@ export default function Login() {
             />
           </div>
           <div className={styles["login-form-input-group"]}>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">密码</label>
             <input
               type="password"
               id="password"
@@ -112,14 +107,14 @@ export default function Login() {
               onChange={(e) => passwordChange(e.target.value)}
               required
             />
-          </div>
+          </div>{}
           <div className={styles["button-container"]}>
             <button
               className={styles["login-form-submit"]}
               type="submit"
               disabled={submitting}
             >
-              Login
+              {isLoading ? "登录中..." :"登录"}
             </button>
           </div>
         </form>

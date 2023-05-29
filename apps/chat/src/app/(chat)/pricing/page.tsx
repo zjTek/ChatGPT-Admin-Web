@@ -87,13 +87,13 @@ function PricingItem(props: {
           {props.price.description && (
             <div className={styles["sub-title"]}>{props.price.description}</div>
           )}
-          ¥ {props.price.price[props.cycle]}
+          {/* ¥ {props.price.price[props.cycle]} */}
         </div>
         {props.price.features.map((feature, index) => (
           <div key={index}>· {feature}</div>
         ))}
       </div>
-      {props.price.name !== "Free" && (
+      {/* {props.price.name !== "Free" && (
         <div className={styles["purchase-wrapper"]}>
           <IconButton
             icon={<span>🎁</span>}
@@ -102,7 +102,7 @@ function PricingItem(props: {
             onClick={() => handleUpgrade(props.price.name, props.cycle)}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
@@ -120,8 +120,8 @@ export default function PricingPage() {
     <>
       <div className={styles["window-header"]}>
         <div className={styles["window-header-title"]}>
-          <div className={styles["window-header-main-title"]}>定价</div>
-          <div className={styles["window-header-sub-title"]}>解锁更多权益</div>
+          <div className={styles["window-header-main-title"]}>套餐</div>
+          <div className={styles["window-header-sub-title"]}>订阅中心 </div>
         </div>
         <div className={styles["window-actions"]}>
           <div className={styles["window-action-button"]}>
@@ -135,7 +135,7 @@ export default function PricingPage() {
         </div>
       </div>
 
-      <div className={styles.switch}>
+      {/* <div className={styles.switch}>
         <button
           className={`${styles.button} ${
             paymentCycle === "monthly" ? styles.active : ""
@@ -162,7 +162,7 @@ export default function PricingPage() {
           年付
           <span className={styles["discount-badge"]}>七折</span>
         </button>
-      </div>
+      </div> */}
 
       <div className={styles["container"]}>
         {prices.map((price, index) => (

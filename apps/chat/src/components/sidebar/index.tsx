@@ -118,7 +118,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           />
           <IconButton
             icon={<ShoppingIcon />}
-            text="充值中心"
+            text="订阅中心"
             className={styles["sidebar-bar-button"]}
             onClick={() => {
               router.push("/pricing");
