@@ -1,0 +1,17 @@
+.custom-row {
+    height: var(--input-height);
+}
+.span-left {
+    display: block;
+    color: #888;
+    padding: 0 8pt;
+    align-items: center;
+    font-size:calc(0.875 * 16px);
+    line-height: 1;
+}
+
+.date-picker {
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    padding: 2pt;
+}
