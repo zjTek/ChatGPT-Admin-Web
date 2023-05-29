@@ -29,7 +29,7 @@ export function complexPsw(min: number, max: number) {
     }
   
     // 随机从数组中抽出一个数值
-    function getOne(arr) {
+    function getOne(arr: string[]) {
       return arr[Math.floor(Math.random() * arr.length)]
     }
   

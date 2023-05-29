@@ -6,7 +6,7 @@ type TableOnRowClick<T> = (rowData: T, rowIndex: number) => void
 interface TableProps {
   tableData: any;
   tableColumn: TableColumnType[];
-  onClick: TableOnRowClick<any>;
+  onClick?: TableOnRowClick<any>;
 }
 
 export interface TableColumnType {
